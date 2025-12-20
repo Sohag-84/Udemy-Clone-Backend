@@ -1,7 +1,9 @@
 import bcrypt from "bcryptjs";
+import fs from "fs";
 
 import { User } from "../models/user.model.js";
 import { generateToken } from "../utils/generate_token.js";
+import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 
 export const register = async (req, res) => {
   try {
@@ -145,6 +147,72 @@ export const getUserProfile = async (req, res) => {
     return res.status(500).json({
       status: false,
       message: "Failed to get profile information",
+    });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  try {
+    const userId = req.userInfo.userId;
+    const { name } = req.body;
+    const profilePhoto = req.file;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found",
+      });
+    }
+
+    const updateData = {};
+
+    //  Name update (only if sent)
+    if (name) {
+      updateData.name = name;
+    }
+
+    //  Photo update (only if sent)
+    if (profilePhoto) {
+      // delete old image if exists
+      if (user.photoUrl) {
+        const publicId = user.photoUrl.split("/").pop().split(".")[0];
+        await deleteMediaFromCloudinary(publicId);
+      }
+
+      const cloudResponse = await uploadMedia(profilePhoto.path);
+
+      updateData.photoUrl = cloudResponse.secure_url;
+      updateData.photoPublicId = cloudResponse.public_id;
+
+      // delete local file
+      fs.unlinkSync(profilePhoto.path);
+    }
+
+    // Nothing to update
+    if (Object.keys(updateData).length === 0) {
+      return res.status(400).json({
+        status: false,
+        message: "No data provided to update",
+      });
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+    })
+      .select("-password")
+      .select("-photoPublicId");
+
+    res.status(200).json({
+      status: true,
+      message: "Profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      status: false,
+      message: "Profile update failed",
     });
   }
 };
