@@ -125,3 +125,26 @@ export const logout = async (req, res) => {
     });
   }
 };
+
+export const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.userInfo.userId; //userInfo comes from token
+    const user = await User.findById(userId).select("-password");
+    if (!user) {
+      return res.status(404).json({
+        status: false,
+        message: "User not found",
+      });
+    }
+    return res.json({
+      status: true,
+      user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      status: false,
+      message: "Failed to get profile information",
+    });
+  }
+};

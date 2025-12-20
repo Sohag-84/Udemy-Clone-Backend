@@ -1,9 +1,10 @@
 import dotenv from "dotenv";
 
 import express from "express";
+import cookieParser from "cookie-parser";
 import connectToDB from "./database/db.js";
 
-import authRouter from "./routes/auth_routes.js";
+import authRouter from "./routes/user_routes.js";
 
 dotenv.config({});
 
@@ -12,6 +13,8 @@ const PORT = process.env.PORT || 3000;
 
 //connect to our database
 connectToDB();
+
+app.use(cookieParser());
 
 //use middlewares
 app.use(express.json());
