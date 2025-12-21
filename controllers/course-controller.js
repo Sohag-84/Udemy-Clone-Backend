@@ -45,6 +45,25 @@ export const createCourse = async (req, res) => {
   }
 };
 
+export const getInstructorAllCourses = async (req, res) => {
+  try {
+    const userId = req.userInfo.userId;
+    const courses = await Course.find({ creator: userId });
+    res.json({
+      status: true,
+      message: "Course fetched successfully",
+      data: courses,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to get admin courses",
+    });
+  }
+};
+
 export const getAllCourse = async (req, res) => {
   try {
     const course = await Course.find();
@@ -161,6 +180,8 @@ export const deleteCourse = async (req, res) => {
       data: deletedCourse,
     });
   } catch (error) {
+    console.log(error);
+
     return res.status(500).json({
       success: false,
       message: "Failed to delete course",

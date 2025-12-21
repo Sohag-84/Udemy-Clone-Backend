@@ -4,6 +4,7 @@ import {
   createCourse,
   deleteCourse,
   getAllCourse,
+  getInstructorAllCourses,
   getCourseById,
   updateCourse,
 } from "../controllers/course-controller.js";
@@ -16,6 +17,9 @@ router
   .post(authMiddleware, adminOrInstructorMiddleware, createCourse);
 
 router.route("/all-course").get(getAllCourse);
+router
+  .route("/instructor-courses")
+  .get(authMiddleware, getInstructorAllCourses);
 router.route("/:id").get(getCourseById);
 router
   .route("/update/:id")
