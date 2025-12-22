@@ -4,9 +4,11 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import connectToDB from "./database/db.js";
 
+import fileErrorHandler from "./utils/file-error-handler.js";
+
 import authRouter from "./routes/user_routes.js";
 import courseRouter from "./routes/course-routes.js";
-import fileErrorHandler from "./utils/file-error-handler.js";
+import sectionRouter from "./routes/section-routes.js";
 
 dotenv.config({});
 
@@ -24,6 +26,7 @@ app.use(express.json());
 //api's
 app.use("/api/v1/user", authRouter);
 app.use("/api/v1/course", courseRouter);
+app.use("/api/v1/section", sectionRouter);
 
 app.get("/home", (req, res) => {
   res.json({

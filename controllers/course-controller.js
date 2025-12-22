@@ -69,7 +69,7 @@ export const getInstructorAllCourses = async (req, res) => {
 
 export const getAllCourse = async (req, res) => {
   try {
-    const course = await Course.find();
+    const course = await Course.find().populate("sections");
     res.status(200).json({
       status: true,
       message: "Course fetched successfully",

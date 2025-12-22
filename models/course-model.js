@@ -5,6 +5,7 @@ const courseSchema = new mongoose.Schema(
     courseTitle: {
       type: String,
       required: true,
+      trim: true,
     },
     subTitle: {
       type: String,
@@ -18,7 +19,7 @@ const courseSchema = new mongoose.Schema(
     },
     courseLevel: {
       type: String,
-      enum: ["Beginner", "Medium", "Advanced"],
+      enum: ["Beginner", "Intermediate", "Advanced"],
     },
     coursePrice: {
       type: Number,
@@ -32,18 +33,21 @@ const courseSchema = new mongoose.Schema(
     courseThumbnailPublicId: {
       type: String,
     },
+
+    sections: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Section",
+      },
+    ],
+
     enrolledStudents: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
       },
     ],
-    lectures: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Lecture",
-      },
-    ],
+
     creator: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
