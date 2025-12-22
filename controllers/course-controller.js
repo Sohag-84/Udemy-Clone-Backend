@@ -1,4 +1,7 @@
+import fs from "fs";
+
 import { Course } from "../models/course-model.js";
+import { deleteMediaFromCloudinary, uploadMedia } from "../utils/cloudinary.js";
 
 export const createCourse = async (req, res) => {
   try {
@@ -130,7 +133,25 @@ export const updateCourse = async (req, res) => {
       });
     }
 
-    const updateCourse = await Course.findByIdAndUpdate(id, req.body, {
+    let updatedData = { ...req.body };
+
+    //if already have thumbnail, then first delete then update
+    if (req.file) {
+      //delete old thumbnail from cloudinary
+      if (course.courseThumbnailPublicId) {
+        await deleteMediaFromCloudinary(course.courseThumbnailPublicId);
+      }
+
+      //upload new thumbnail
+      const uploadResult = await uploadMedia(req.file.path);
+
+      updatedData.courseThumbnail = uploadResult.secure_url;
+      updatedData.courseThumbnailPublicId = uploadResult.public_id;
+
+      fs.unlinkSync(req.file.path);
+    }
+
+    const updateCourse = await Course.findByIdAndUpdate(id, updatedData, {
       new: true,
     });
 

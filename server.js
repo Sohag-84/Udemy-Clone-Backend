@@ -6,6 +6,7 @@ import connectToDB from "./database/db.js";
 
 import authRouter from "./routes/user_routes.js";
 import courseRouter from "./routes/course-routes.js";
+import fileErrorHandler from "./utils/file-error-handler.js";
 
 dotenv.config({});
 
@@ -30,6 +31,8 @@ app.get("/home", (req, res) => {
     message: "Home page",
   });
 });
+
+app.use(fileErrorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is now runnig on port ${PORT}`);

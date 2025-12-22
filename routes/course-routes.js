@@ -9,6 +9,7 @@ import {
   updateCourse,
 } from "../controllers/course-controller.js";
 import adminOrInstructorMiddleware from "../middlewares/admin_or_instructor-middleware.js";
+import upload from "../utils/multer.js";
 
 const router = express.Router();
 
@@ -23,7 +24,12 @@ router
 router.route("/:id").get(getCourseById);
 router
   .route("/update/:id")
-  .post(authMiddleware, adminOrInstructorMiddleware, updateCourse);
+  .post(
+    authMiddleware,
+    adminOrInstructorMiddleware,
+    upload.single("courseThumbnail"),
+    updateCourse
+  );
 router
   .route("/delete/:id")
   .get(authMiddleware, adminOrInstructorMiddleware, deleteCourse);

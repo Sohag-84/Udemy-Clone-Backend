@@ -27,6 +27,10 @@ const courseSchema = new mongoose.Schema(
     },
     courseThumbnail: {
       type: String,
+      default: "",
+    },
+    courseThumbnailPublicId: {
+      type: String,
     },
     enrolledStudents: [
       {
