@@ -117,3 +117,36 @@ export const updateLecture = async (req, res) => {
     });
   }
 };
+
+export const deleteLecture = async (req, res) => {
+  try {
+    const { lectureId } = req.params;
+
+    const lecture = await Lecture.findById(lectureId);
+    if (!lecture) {
+      return res.status(404).json({
+        success: false,
+        message: "Lecture not found",
+      });
+    }
+
+    // 1: Remove lecture reference from section
+    await Section.findByIdAndUpdate(lecture.section, {
+      $pull: { lectures: lectureId },
+    });
+
+    // 2: Delete lecture
+    await Lecture.findByIdAndDelete(lectureId);
+
+    return res.status(200).json({
+      success: true,
+      message: "Lecture deleted successfully",
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to delete lecture",
+    });
+  }
+};

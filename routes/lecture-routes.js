@@ -3,6 +3,7 @@ import authMiddleware from "../middlewares/auth-middlewares.js";
 import adminOrInstructorMiddleware from "../middlewares/admin_or_instructor-middleware.js";
 import {
   createLecture,
+  deleteLecture,
   getAllLecture,
   updateLecture,
 } from "../controllers/lecture-controller.js";
@@ -14,7 +15,11 @@ router
   .post(authMiddleware, adminOrInstructorMiddleware, createLecture);
 router.route("/:sectionId").get(getAllLecture);
 router
-  .route("/:lectureId/update")
+  .route("/update/:lectureId")
   .post(authMiddleware, adminOrInstructorMiddleware, updateLecture);
+
+router
+  .route("/delete/:lectureId")
+  .post(authMiddleware, adminOrInstructorMiddleware, deleteLecture);
 
 export default router;
