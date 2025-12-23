@@ -7,6 +7,7 @@ import {
   getInstructorAllCourses,
   getCourseById,
   updateCourse,
+  toggolePublishCourse,
 } from "../controllers/course-controller.js";
 import adminOrInstructorMiddleware from "../middlewares/admin_or_instructor-middleware.js";
 import upload from "../utils/multer.js";
@@ -33,5 +34,9 @@ router
 router
   .route("/delete/:id")
   .get(authMiddleware, adminOrInstructorMiddleware, deleteCourse);
+
+router
+  .route("/:courseId")
+  .post(authMiddleware, adminOrInstructorMiddleware, toggolePublishCourse);
 
 export default router;

@@ -214,3 +214,35 @@ export const deleteCourse = async (req, res) => {
     });
   }
 };
+
+export const toggolePublishCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const { publish } = req.query;
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({
+        status: false,
+        message: "Course not found.",
+      });
+    }
+
+    //publish status based on the query parameter
+    course.isPublished = publish === "true";
+    await course.save();
+    const statusMessage = course.isPublished
+      ? "Course is published"
+      : "Course is unpublished";
+
+    return res.status(200).json({
+      status: false,
+      message: statusMessage,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update status",
+    });
+  }
+};
