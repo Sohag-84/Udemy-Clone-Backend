@@ -72,4 +72,48 @@ export const getAllLecture = async (req, res) => {
   }
 };
 
+export const updateLecture = async (req, res) => {
+  try {
+    const { lectureId } = req.params;
+    const {
+      title,
+      videoUrl,
+      videoPublicId,
+      isPreview,
+      duration,
+      resources,
+      videoOrder,
+    } = req.body;
 
+    const lecture = await Lecture.findById(lectureId);
+    if (!lecture) {
+      return res.status(404).json({
+        success: false,
+        message: "Lecture not found",
+      });
+    }
+
+    // Update only provided fields
+    if (title !== undefined) lecture.title = title;
+    if (videoUrl !== undefined) lecture.videoUrl = videoUrl;
+    if (videoPublicId !== undefined) lecture.videoPublicId = videoPublicId;
+    if (isPreview !== undefined) lecture.isPreview = isPreview;
+    if (duration !== undefined) lecture.duration = duration;
+    if (resources !== undefined) lecture.resources = resources;
+    if (videoOrder !== undefined) lecture.videoOrder = videoOrder;
+
+    await lecture.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Lecture updated successfully",
+      data: lecture,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update lecture",
+    });
+  }
+};

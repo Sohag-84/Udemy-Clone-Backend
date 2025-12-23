@@ -4,6 +4,7 @@ import adminOrInstructorMiddleware from "../middlewares/admin_or_instructor-midd
 import {
   createLecture,
   getAllLecture,
+  updateLecture,
 } from "../controllers/lecture-controller.js";
 
 const router = express.Router();
@@ -12,5 +13,8 @@ router
   .route("/:sectionId/create")
   .post(authMiddleware, adminOrInstructorMiddleware, createLecture);
 router.route("/:sectionId").get(getAllLecture);
+router
+  .route("/:lectureId/update")
+  .post(authMiddleware, adminOrInstructorMiddleware, updateLecture);
 
 export default router;
