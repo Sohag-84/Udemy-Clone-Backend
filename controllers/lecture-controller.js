@@ -71,3 +71,5 @@ export const getAllLecture = async (req, res) => {
     });
   }
 };
+
+
