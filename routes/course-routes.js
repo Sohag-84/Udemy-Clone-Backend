@@ -8,6 +8,8 @@ import {
   getCourseById,
   updateCourse,
   toggolePublishCourse,
+  getPublishedCoursesdf,
+  getPublishedCourses,
 } from "../controllers/course-controller.js";
 import adminOrInstructorMiddleware from "../middlewares/admin_or_instructor-middleware.js";
 import upload from "../utils/multer.js";
@@ -38,5 +40,8 @@ router
 router
   .route("/:courseId")
   .post(authMiddleware, adminOrInstructorMiddleware, toggolePublishCourse);
+
+router
+.route("/publish-course/get").get(getPublishedCourses);
 
 export default router;
