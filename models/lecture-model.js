@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const lectureSchema = new mongoose.Schema(
   {
-    lectureTitle: {
+    title: {
       type: String,
       required: true,
       trim: true,
@@ -29,6 +29,11 @@ const lectureSchema = new mongoose.Schema(
     videoOrder: {
       type: Number,
       default: 0,
+    },
+    section: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Section",
+      required: true,
     },
   },
   { timestamps: true }

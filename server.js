@@ -8,6 +8,7 @@ import fileErrorHandler from "./utils/file-error-handler.js";
 
 import authRouter from "./routes/user_routes.js";
 import courseRouter from "./routes/course-routes.js";
+import lectureRouter from "./routes/lecture-routes.js";
 import sectionRouter from "./routes/section-routes.js";
 
 dotenv.config({});
@@ -27,6 +28,7 @@ app.use(express.json());
 app.use("/api/v1/user", authRouter);
 app.use("/api/v1/course", courseRouter);
 app.use("/api/v1/section", sectionRouter);
+app.use("/api/v1/lecture", lectureRouter);
 
 app.get("/home", (req, res) => {
   res.json({

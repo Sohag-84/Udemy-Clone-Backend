@@ -69,7 +69,12 @@ export const getInstructorAllCourses = async (req, res) => {
 
 export const getAllCourse = async (req, res) => {
   try {
-    const course = await Course.find().populate("sections");
+    const course = await Course.find().populate({
+      path: "sections",
+      populate: {
+        path: "lectures",
+      },
+    });
     res.status(200).json({
       status: true,
       message: "Course fetched successfully",
