@@ -281,19 +281,3 @@ export const getPublishedCourses = async (req, res) => {
     });
   }
 };
-
-export const getPublishedCoursesdf = async (req, res) => {
-  try {
-    const course = await Course.find({});
-    return res.json({
-      status: true,
-      data: course,
-    });
-  } catch (error) {
-    console.log(error);
-    res.status(500).json({
-      status: false,
-      mesage: "Failed to get published course",
-    });
-  }
-};
