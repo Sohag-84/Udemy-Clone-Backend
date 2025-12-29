@@ -267,6 +267,7 @@ export const getPublishedCourses = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      message:"Published courses fetched successfully",
       totalCourses,
       currentPage: page,
       totalPages: Math.ceil(totalCourses / limit),

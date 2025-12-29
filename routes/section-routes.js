@@ -22,8 +22,6 @@ router
   .route("/:sectionId/edit")
   .post(authMiddleware, adminOrInstructorMiddleware, editSection);
 
-router
-  .route("/:courseId/get")
-  .get(authMiddleware, adminOrInstructorMiddleware, getAllSections);
+router.route("/:courseId/get").get(authMiddleware, getAllSections);
 
 export default router;

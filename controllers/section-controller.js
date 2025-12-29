@@ -124,13 +124,12 @@ export const getAllSections = async (req, res) => {
     const { courseId } = req.params;
 
     const course = await Course.findById(courseId)
-      .select("sections")
+      .select("courseTitle description creator sections")
+      .populate("creator", "name email photoUrl")
       .populate({
         path: "sections",
-        options: { sort: { order: 1 } },
         populate: {
           path: "lectures",
-          options: { sort: { videoOrder: 1 } },
         },
       });
 
