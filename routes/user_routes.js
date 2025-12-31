@@ -1,5 +1,6 @@
 import express from "express";
 import {
+  getAllUser,
   getUserProfile,
   login,
   logout,
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.route("/register").post(register);
 router.route("/login").post(login);
+router.route("/user-list").get(getAllUser);
 router.route("/logout").get(logout);
 router.route("/profile").get(authMiddleware, getUserProfile);
 router.post(

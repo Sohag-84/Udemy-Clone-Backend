@@ -19,7 +19,8 @@ const lectureSchema = new mongoose.Schema(
       default: false,
     },
     duration: {
-      type: Number, // in seconds or minutes
+      type: String, // format "HH:MM" or in seconds as string
+      default: "00:00",
     },
     resources: [
       {

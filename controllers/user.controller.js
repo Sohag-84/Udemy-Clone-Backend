@@ -114,6 +114,15 @@ export const login = async (req, res) => {
   }
 };
 
+export const getAllUser = async (req, res) => {
+  const users = await User.find();
+  res.status(200).json({
+    status: true,
+    message: "User list fetched succesfully",
+    data: users,
+  });
+};
+
 export const logout = async (req, res) => {
   try {
     return res.status(200).cookie("token", "", { maxAge: 0 }).json({
