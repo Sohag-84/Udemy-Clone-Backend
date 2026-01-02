@@ -21,6 +21,8 @@ export const createSlider = async (req, res) => {
       isActive,
     });
 
+    fs.unlinkSync(imageUrl.path);
+
     return res.status(201).json({
       status: true,
       message: "Slider created successfully",
@@ -39,12 +41,10 @@ export const createSlider = async (req, res) => {
 export const getSlider = async (req, res) => {
   try {
     const slider = await Slider.find({ isActive: true });
-    const sl = await Slider.find({ isActive: false });
     return res.json({
       status: true,
       message: "Slider fetched successfully",
       data: slider,
-      sl,
     });
   } catch (error) {
     console.log(error);
@@ -59,7 +59,7 @@ export const getSlider = async (req, res) => {
 export const deleteSlider = async (req, res) => {
   try {
     const { id } = req.params;
-    const slider = await Slider.findByIdAndDelete(id);
+    const slider = await Slider.findById(id);
 
     if (!slider) {
       return res.status(400).json({
@@ -67,6 +67,15 @@ export const deleteSlider = async (req, res) => {
         message: "Slider not found!",
       });
     }
+
+    //delete image from cloudinary
+    if (slider.publicId) {
+      await deleteMediaFromCloudinary(slider.publicId);
+    }
+
+    //now delete slider from mongoDB
+    await Slider.findByIdAndDelete(id);
+
     return res.json({
       status: true,
       message: "Slider successfully deleted",
