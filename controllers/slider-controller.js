@@ -21,7 +21,7 @@ export const createSlider = async (req, res) => {
       isActive,
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       status: true,
       message: "Slider created successfully",
       data: slider,
@@ -39,10 +39,37 @@ export const createSlider = async (req, res) => {
 export const getSlider = async (req, res) => {
   try {
     const slider = await Slider.find({ isActive: true });
-    res.json({
+    const sl = await Slider.find({ isActive: false });
+    return res.json({
       status: true,
       message: "Slider fetched successfully",
       data: slider,
+      sl,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      status: false,
+      message: "Failed to fetched slider",
+    });
+  }
+};
+
+export const deleteSlider = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const slider = await Slider.findByIdAndDelete(id);
+
+    if (!slider) {
+      return res.status(400).json({
+        status: false,
+        message: "Slider not found!",
+      });
+    }
+    return res.json({
+      status: true,
+      message: "Slider successfully deleted",
     });
   } catch (error) {
     console.log(error);
