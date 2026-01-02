@@ -23,7 +23,7 @@ export const createSlider = async (req, res) => {
 
     res.status(201).json({
       status: true,
-      message: "Slider created succesfully",
+      message: "Slider created successfully",
       data: slider,
     });
   } catch (error) {
@@ -32,6 +32,24 @@ export const createSlider = async (req, res) => {
     return res.status(500).json({
       status: false,
       message: "Failed to create slider",
+    });
+  }
+};
+
+export const getSlider = async (req, res) => {
+  try {
+    const slider = await Slider.find({ isActive: true });
+    res.json({
+      status: true,
+      message: "Slider fetched successfully",
+      data: slider,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      status: false,
+      message: "Failed to fetched slider",
     });
   }
 };
