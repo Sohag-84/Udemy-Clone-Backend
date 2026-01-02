@@ -18,7 +18,7 @@ export const createCourse = async (req, res) => {
     // Basic validation
     if (!courseTitle || !category || !coursePrice) {
       return res.status(400).json({
-        success: false,
+        status: false,
         message: "Course title, category, and price are required",
       });
     }
@@ -35,7 +35,7 @@ export const createCourse = async (req, res) => {
     });
 
     return res.status(201).json({
-      success: true,
+      status: true,
       message: "Course created successfully",
       data: course,
     });
@@ -61,7 +61,7 @@ export const getInstructorAllCourses = async (req, res) => {
     console.log(error);
 
     return res.status(500).json({
-      success: false,
+      status: false,
       message: "Failed to get admin courses",
     });
   }
@@ -98,18 +98,18 @@ export const getCourseById = async (req, res) => {
 
     if (!course) {
       return res.status(404).json({
-        success: false,
+        status: false,
         message: "Course not found",
       });
     }
 
     return res.status(200).json({
-      success: true,
+      status: true,
       data: course,
     });
   } catch (error) {
     return res.status(500).json({
-      success: false,
+      status: false,
       message: "Failed to get course",
     });
   }
@@ -123,7 +123,7 @@ export const updateCourse = async (req, res) => {
     const course = await Course.findById(id);
     if (!course) {
       return res.status(404).json({
-        success: false,
+        status: false,
         message: "Course not found",
       });
     }
@@ -133,7 +133,7 @@ export const updateCourse = async (req, res) => {
       course.instructor.toString() !== req.userInfo.id
     ) {
       return res.status(403).json({
-        success: false,
+        status: false,
         message: "You are not allowed to update this course",
       });
     }
@@ -161,7 +161,7 @@ export const updateCourse = async (req, res) => {
     });
 
     return res.status(200).json({
-      success: true,
+      status: true,
       message: "Course updated successfully",
       data: updateCourse,
     });
@@ -169,7 +169,7 @@ export const updateCourse = async (req, res) => {
     console.log(error);
 
     return res.status(500).json({
-      success: false,
+      status: false,
       message: "Failed to update course",
     });
   }
@@ -183,7 +183,7 @@ export const deleteCourse = async (req, res) => {
     const course = await Course.findById(id);
     if (!course) {
       return res.status(404).json({
-        success: false,
+        status: false,
         message: "Course not found",
       });
     }
@@ -193,7 +193,7 @@ export const deleteCourse = async (req, res) => {
       course.instructor.toString() !== req.userInfo.id
     ) {
       return res.status(403).json({
-        success: false,
+        status: false,
         message: "You are not allowed to delete this course",
       });
     }
@@ -201,7 +201,7 @@ export const deleteCourse = async (req, res) => {
     const deletedCourse = await Course.findByIdAndDelete(id);
 
     return res.status(200).json({
-      success: true,
+      status: true,
       message: "Course deleted successfully",
       data: deletedCourse,
     });
@@ -209,7 +209,7 @@ export const deleteCourse = async (req, res) => {
     console.log(error);
 
     return res.status(500).json({
-      success: false,
+      status: false,
       message: "Failed to delete course",
     });
   }
@@ -235,13 +235,13 @@ export const toggolePublishCourse = async (req, res) => {
       : "Course is unpublished";
 
     return res.status(200).json({
-      status: false,
+      status: true,
       message: statusMessage,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
-      success: false,
+      status: false,
       message: "Failed to update status",
     });
   }
@@ -266,7 +266,7 @@ export const getPublishedCourses = async (req, res) => {
     });
 
     res.status(200).json({
-      success: true,
+      status: true,
       message: "Published courses fetched successfully",
       totalCourses,
       currentPage: page,
@@ -276,7 +276,7 @@ export const getPublishedCourses = async (req, res) => {
   } catch (error) {
     console.error("Get Published Courses Error:", error);
     res.status(500).json({
-      success: false,
+      status: false,
       message: "Failed to fetch published courses",
       error: error.message,
     });
