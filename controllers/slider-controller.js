@@ -89,3 +89,50 @@ export const deleteSlider = async (req, res) => {
     });
   }
 };
+
+export const upldateSlider = async (req, res) => {
+  try {
+    const { sliderId } = req.params;
+
+    const slider = await Slider.findById(sliderId);
+    if (!slider) {
+      return res.status(400).json({
+        status: false,
+        message: "Slider not found!",
+      });
+    }
+
+    let updateData = { ...req.body };
+
+    //if already have slider image: 1. first delete 2. then update
+    if (req.file) {
+      //delete old image from cloudinary
+      if (slider.publicId) {
+        await deleteMediaFromCloudinary(slider.publicId);
+      }
+      //upload new slider image
+      const uploadResult = await uploadMedia(req.file.path);
+      updateData.imageUrl = uploadResult.secure_url;
+      updateData.publicId = uploadResult.public_id;
+
+      fs.unlinkSync(req.file.path);
+    }
+
+    const updateSlider = await Slider.findByIdAndUpdate(sliderId, updateData, {
+      new: true,
+    });
+
+    return res.status(200).json({
+      status: true,
+      message: "Slier updated successfully",
+      data: updateSlider,
+    });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({
+      status: false,
+      message: "Failed to update slider",
+    });
+  }
+};
